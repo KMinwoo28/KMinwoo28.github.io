@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Mouse Event Example</title>
+    <style>
+      #box {
+        width: 100px;
+        height: 100px;
+        background-color: yellow;
+        position: absolute;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <p>Click the box below to see mouse events in action:</p>
+      <div id="box"></div>
+    </div>
+    <script>
+      const box = document.querySelector('#box');
+      const container = document.getElementById("container");   
+
+      container.addEventListener('mouseenter', () => {
+        container.style.backgroundColor = 'blue';
+        console.log("Mouse entered container!");
+      });
+
+      container.addEventListener('mouseleave', () => {
+        container.style.backgroundColor = 'red';
+          console.log("Mouse left container!");
+      });
+
+      box.addEventListener('mousedown', () => {
+        box.style.backgroundColor = 'green';
+        console.log("Mouse button pressed down on box!");
+      });
+
+      box.addEventListener('mouseup', () => {
+        box.style.backgroundColor = 'red';
+        console.log("Mouse button released on box!");
+      });
+
+      box.addEventListener('mousemove', () => {
+        box.style.backgroundColor = 'black';
+        console.log("Mouse moved over box!");
+      });
+
+    </script>
+  </body>
+</html>
+
+
