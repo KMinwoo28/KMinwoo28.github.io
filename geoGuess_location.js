@@ -50,7 +50,7 @@ var SCORE_MAX = 5000;
 var SCORE_DMAX = 100; // km: 100km 이상이면 0점
 var INITIAL_MAP_CENTER = new kakao.maps.LatLng(36.5, 127.9);
 var INITIAL_MAP_LEVEL = 13;
-var REGIONS_URL = "/board/resources/geoGuess/json/regions.json";
+var REGIONS_URL = "./regions.json";
 
 /* ===== State ===== */
 var regions = [];
@@ -687,3 +687,4 @@ if (typeof window !== 'undefined') {
     }
   });
 }
+
