@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GeoGuess</title>
+    <script>
+       var REGIONS_URL = "https://kminwoo28.github.io/regions.json";
+    </script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0063212ff2140d1d0a96456e0662fc93&libraries=services,geometry"></script>
+    <script src="https://kminwoo28.github.io/geoGuess_location.js'/>"></script>
+    
+    
+    <style>
+    :root{
+  --bg: #f6f7fb;
+  --card: rgba(255,255,255,0.9);
+  --text: #111;
+  --muted: #666;
+  --border: rgba(0,0,0,0.08);
+  --shadow: 0 10px 30px rgba(0,0,0,0.08);
+  --primary: #0ea5e9; /* 하늘색 */
+  --accent: #16a34a;  /* 정답/성공 */
+  --danger: #ef4444;  /* 초기화 등 */
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0b0f14; --card: rgba(17,18,20,0.7); --text:#f1f5f9; --muted:#9aa4b2; --border: rgba(255,255,255,0.12);
+    --shadow: 0 10px 30px rgba(0,0,0,0.35);
+  }
+}
+
+/* 전체 배경 & 기본 폰트 */
+html,body{height:100%}
+body{
+  margin:0; background: linear-gradient(180deg, var(--bg), #fff 40%, var(--bg) 100%);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; color:var(--text);
+}
+
+/* 메인 레이아웃: 상단 HUD(가볍게), 본영역, 하단 바 */
+#gameArea{
+  max-width: 1200px; margin: 16px auto; padding: 12px;
+  display: grid; grid-template-rows: auto 1fr auto; gap: 12px;
+}
+
+/* 상단 HUD 박스 (라운드/점수/위치/거리) */
+.hud{
+  display:flex; flex-wrap:wrap; align-items:center; gap:10px 14px;
+  background: var(--card); border:1px solid var(--border); border-radius:14px; padding:10px 14px;
+  backdrop-filter: blur(8px); box-shadow: var(--shadow);
+}
+#roundTitle{ font-weight:800; font-size:18px; padding:6px 10px; border-radius:999px; background:rgba(14,165,233,0.12); color:var(--primary) }
+#roundPoint{ font-weight:800; font-size:18px; padding:6px 10px; border-radius:999px; background:rgba(22,163,74,0.12); color:var(--accent) }
+#roundLocation{ color:var(--muted); font-weight:600 }
+#roundDistance{ font-weight:700 }
+
+/* 지도/로드뷰 영역: 데스크탑 2열, 모바일 1열 */
+.panes{
+  display:grid; gap:12px;
+  grid-template-columns: 2fr 1fr;
+  grid-auto-rows: minmax(420px, calc(100vh - 260px));
+}
+@media (max-width: 960px){
+  .panes{ grid-template-columns: 1fr; grid-auto-rows: 340px; }
+}
+#roadview, #map{
+  width:100%; height:100%;
+  border:1px solid var(--border); border-radius:14px; background:#fff; box-shadow: var(--shadow); overflow:hidden;
+}
+
+/* 하단 추측바 */
+#guessBar{
+  position: sticky; bottom: 0; z-index: 5;
+  background: var(--card); border:1px solid var(--border); border-radius:12px; padding:10px 12px; text-align:center;
+  backdrop-filter: blur(8px); box-shadow: var(--shadow);
+}
+#guessBar .btn{
+  display:inline-block; min-width:120px; margin:6px; padding:11px 16px;
+  border:1px solid var(--border); border-radius:10px; background:#fff; color:var(--text); font-weight:700; text-decoration:none;
+}
+#btnSubmitGuess{ background: var(--primary); color:#fff; border-color: transparent; }
+#btnNextRound{ background: #111; color:#fff; border-color: transparent; }
+#btnClearGuess{ background: var(--danger); color:#fff; border-color: transparent; }
+#guessBar .btn:hover{ filter: brightness(0.95); }
+
+/* 결과 패널 (정답/점수 + 미니맵) */
+#roundResult{
+  max-width: 1100px; margin: 12px auto; padding: 14px;
+  background: var(--card); border:1px solid var(--border); border-radius:14px; box-shadow: var(--shadow);
+}
+.round-result-grid{
+  display:grid; grid-template-columns: 1fr 520px; gap:12px; align-items: stretch;
+}
+@media (max-width: 1024px){ .round-result-grid{ grid-template-columns: 1fr; } }
+.round-result-box{
+  border:1px dashed var(--border); border-radius:12px; padding:12px;
+}
+#resultMap{
+  width:100%; height:320px; border:1px solid var(--border); border-radius:12px; background:#fff; box-shadow: var(--shadow);
+}
+
+/* 종료 요약 */
+#endSummary{
+  max-width: 1100px; margin: 12px auto; padding:16px;
+  background: var(--card); border:1px solid var(--border); border-radius:14px; box-shadow: var(--shadow);
+}
+.table{ width:100%; border-collapse: collapse; font-size:14px; }
+.table thead th{
+  text-align:left; font-weight:800; border-bottom:2px solid var(--border); padding:10px 8px;
+}
+.table tbody td{
+  border-bottom:1px solid var(--border); padding:10px 8px;
+}
+.table tbody tr:nth-child(odd){ background: rgba(0,0,0,0.025); }
+.end-actions{ margin-top:12px; display:flex; gap:8px; flex-wrap:wrap }
+
+/* 공용 버튼 (메인/다시하기 등) */
+.btn{
+  display:inline-block; padding:11px 16px; border:1px solid var(--border);
+  border-radius:10px; background:#fff; color:var(--text); font-weight:700; text-decoration:none;
+}
+.btn:hover{ filter:brightness(0.95) }
+.btn--primary{ background: var(--primary); color:#fff; border-color: transparent; }
+.btn--dark{ background:#111; color:#fff; border-color: transparent; }
+.btn--danger{ background: var(--danger); color:#fff; border-color: transparent; }
+
+/* 작은 메타 텍스트 */
+.meta{ color:var(--muted); font-size:13px; }
+/* 가로 한 줄 고정 정렬 */
+#guessBar{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: nowrap; /* 필요하면 wrap 으로 바꿔도 됨 */
+}
+
+/* 버튼 크기 축소 & 고정폭 제거 */
+#guessBar .btn{
+  display: inline-flex;           /* 가로 정렬 안정화 */
+  align-items: center;
+  justify-content: center;
+  width: auto !important;         /* 100% 등 강제폭 무시 */
+  min-width: 0 !important;        /* 내가 넣었던 120px 제거 */
+  margin: 0;                      /* 여백 축소 */
+  padding: 6px 12px !important;   /* 이전 느낌으로 소형화 */
+  font-size: 14px !important;
+  line-height: 1.2;
+  border-radius: 8px;
+}
+
+/* 개별 ID에도 동일 패딩/폰트 적용 */
+#btnSubmitGuess,
+#btnClearGuess,
+#btnNextRound{
+  padding: 6px 12px !important;
+  font-size: 14px !important;
+}
+
+/* 화면이 아주 좁을 때 더 작게(선택) */
+@media (max-width: 360px){
+  #guessBar{ gap:6px; }
+  #guessBar .btn{
+    padding: 5px 10px !important;
+    font-size: 13px !important;
+  }
+}
+    
+    </style>
+    
+   
+</head>
+<body>
+<h2>GeoGuess</h2>  
+<div id="gameArea">
+  <div class="hud">
+    <span id="round-info">라운드: 1 / 5</span> |
+    <span id="score-info">현재 점수: 0</span>
+  </div>
+  <div class="panes">
+    <div id="roadview" style="width:100%;height:600px;position:relative;"></div>
+    <div id="mapDock" style="position:fixed; right:20px; bottom:20px; width:340px; z-index:9999;">
+      <div id="map" style="width:100%; height:340px; border:2px solid #333; background:#fff; border-radius:8px 8px 0 0;"></div>
+  	  <div id="guessBar" class="mapFooter" style="display:none;">
+  	    <a id="btnSubmitGuess" href="#" class="btn">추측하기</a>
+  	    <a id="btnClearGuess" href="#" class="btn">취소</a>
+  	  </div>
+    </div>
+  </div>
+</div>
+
+<div id="roundResult" style="display:none;">
+  <div class="round-result-grid">
+    <div class="round-result-box">
+      <div id="roundHeader" style="display:flex;align-items:center;gap:16px;justify-content:space-between;">
+        <h2 id="roundTitle" style="margin:0;">Round 1</h2>
+        <div id="roundPoint" style="font-weight:800;">0 포인트</div>
+      </div>
+      
+      <div style="margin:10px 0 6px;height:8px;background:#eee;border=radius:9999px;overflow:hidden;">
+        <div id="roundGauge" style="height:100%;width:0%;background:#f6c33e;"></div>
+      </div>
+      
+      <p id="roundLocation" style="margin:6px 0 12px;opacity:.85;">장소</p>
+      <p id="roundDistance" style="margin:6px 0 12px;opacity:.85;">정답위치에서 0km 떨어졌습니다.</p>
+    </div>
+    <!-- 새로운 결과용 맵 -->
+    <div id="resultMap" style="width:100%;height:360px;border-radius:10px;overflow:hidden"></div>
+      
+    <div style="text-align:center;margin-top:12px;">
+      <button id="btnNextRound" class="btn">다음 라운드</button>
+    </div>
+  </div>
+</div>  
+
+<section id="endSummary" style="display:none; margin-top:16px;">
+  <h2 style="margin:0 0 8px;">게임 종료</h2>
+  <div id="endScore" style="font-weight:800; margin-bottom:10px;">총점: 0</div>
+  <table class="table">
+    <thead>
+      <tr style="text-align:left; border-bottom:1px solid #ddd;">
+        <th style="padding:8px 4px;">라운드</th>
+        <th style="padding:8px 4px;">정답</th>
+        <th style="padding:8px 4px;">거리</th>
+        <th style="padding:8px 4px;">점수</th>
+      </tr>
+    </thead>
+    <tbody id="roundLogTable"></tbody>
+  </table>
+  
+  <div id="btnResult">
+      <a id="btnSaveScore" class="btn" href="#">점수 등록</a>
+      <a id="btnRetry" class="btn" href="#">다시 하기</a>
+      <a id="btnGoMain" class="btn" href="https://kminwoo28.github.io/main">메인 화면으로 돌아가기</a>
+  </div>
+  
+  
+</section>
+
+<a id="btnGoMain2" class="btn" href="https://kminwoo28.github.io/main">메인 화면으로 돌아가기</a>
+</body>
+
+<script type="text/javascript">
+	function on(id, type, handler){
+		 var el = document.getElementById(id);
+		 if (!el) return false;
+		 el.addEventListener(type, handler, false);
+		 return true;
+	}
+	
+	// endSummary 버튼들
+	on('btnSaveScore', 'click', function(e){
+		 e.preventDefault();
+		 alert('아직 구현되지 않음');
+	});
+	
+	on('btnRetry', 'click', function(e){
+		e.preventDefault();
+		window.location.reload();
+	});
+	
+</script>
+</html>
+  
