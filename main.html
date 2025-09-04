@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>GeoGuess</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Noto Sans KR, Helvetica, Arial, sans-serif; line-height: 1.6; margin: 24px; }
+    .wrap { max-width: 880px; margin: 0 auto; }
+    h1 { margin: 0 0 12px; }
+    .muted { color: #666; font-size: 14px; }
+    .card { border: 1px solid #ddd; padding: 16px; border-radius: 8px; margin: 16px 0; background:#fff; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; grid-gap: 16px; }
+    .btn { display: inline-block; padding: 12px 18px; border: 1px solid #222; border-radius: 8px; text-decoration: none; color: #111; font-weight: 600; }
+    .btn:hover { background:#111; color:#fff; }
+    .list { margin: 0; padding-left: 18px; }
+    .kbd { display:inline-block; padding: 2px 6px; border:1px solid #aaa; border-bottom-width:2px; border-radius:4px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+    .hr { height:1px; background:#eee; margin: 16px 0; border:0; }
+    table { border-collapse: collapse; width: 100%; }
+    td, th { border:1px solid #e5e5e5; padding:8px; text-align:center; }
+    th { background:#fafafa; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>GeoGuess</h1>
+    <div class="muted">게시판 내 미니게임 · Kakao 로드뷰 기반</div>
+
+    <div class="card">
+      <h2>게임 개요</h2>
+      <p>무작위로 선택된 <strong>국내 장소</strong>의 <strong>로드뷰</strong>를 보고, 오른쪽 아래 <strong>미니 지도</strong>에서 정확한 위치를 찍어 맞추는 게임입니다. 총 <strong>5라운드</strong> 진행되며, 실제 위치와의 <strong>거리(km)</strong>에 따라 점수를 획득합니다.</p>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>플레이 방법</h3>
+        <ol class="list">
+          <li>로드뷰 화면을 회전/확대해서 주변 단서를 살펴봅니다.</li>
+          <li>화면 오른쪽 아래의 지도를 클릭해 추측 위치를 선택합니다.</li>
+          <li>거리와 획득 점수가 표시되고 추측 위치와 정답 위치가 표시됩니다.</li>
+          <li>5라운드 합산 점수가 최종 점수입니다.</li>
+        </ol>
+      </div>
+      <div class="card">
+        <h3>조작</h3>
+        <ul class="list">
+          <li>로드뷰 이동: 마우스 드래그 / 클릭</li>
+          <li>확대·축소: 마우스 휠</li>
+          <li>지도에서 선택: 위치를 <strong>한 번 클릭</strong></li>
+          <li>브라우저 새로고침: <span class="kbd">Ctrl</span> + <span class="kbd">F5</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>점수 체계</h3>
+      <p>최대 점수는 <strong>5000점</strong>이며, <strong>100km 이상</strong> 떨어진 경우 <strong>0점</strong>입니다. 100km 이내의 경우, 거리와 점수는 로그 함수를 기반으로 계산되며, 가까울수록 점수가 급격히 높아집니다.</p>
+      <table>
+        <thead><tr><th>거리(km)</th><th>점수 계산</th></tr></thead>
+        <tbody>
+          <tr><td>100km 이상</td><td>0점</td></tr>
+          <tr><td>100km 미만</td><td>5000 × [ 1 − ( log<sub>10</sub>(거리 + 1) ÷ log<sub>10</sub>(101) ) ]</td></tr>
+        </tbody>
+      </table>
+      <div class="muted">※ 가까울수록 높은 점수를 부여하며, 점수 감소 폭은 거리 증가에 따라 완만해집니다.</div>
+    </div>
+
+    <div class="card">
+      <h3>알림</h3>
+      <ul class="list">
+        <li>일부 지역은 로드뷰가 제공되지 않아 다른 장소로 자동 대체될 수 있습니다.</li>
+        <li>게임 중 표시되는 좌표는 서버에 저장하지 않습니다(랭킹 모드 도입 전까지).</li>
+        <li>모바일 환경에서는 데이터 사용량에 유의하세요.</li>
+      </ul>
+    </div>
+
+    <div class="hr"></div>
+
+    <p>
+      <a class="btn" href="https://kminwoo28.github.io/main">게임 시작하기</a>
+    </p>
+
+  </div>
+</body>
+</html>
