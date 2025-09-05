@@ -2,4 +2,4 @@
 For site generation
 
 Go to GeoGuess ⬇️  
-[Link](https://kminwoo28.github.io/main)
+[Link](https://kminwoo28.github.io/GeoGuess/main)
