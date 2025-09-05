@@ -3,29 +3,7 @@
  *  - Kakao Maps JS SDK with services:
  *    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_KEY&libraries=services"></script>
  *  - HTML IDs: roadview, map, round-info, score-info
- *  - /resources/data/regions.json : [{ "region":"서울특별시", "bbox":[minLat,minLng,maxLat,maxLng] }, ...]
- */
-
-/* functions
- * @ addListenerOnce(target, type, handler) : kakaomap의 addListener를 한번 더 wrap
- * @ setText(id, txt) : 해당 id의 dom 객체의 html 내용을 txt로 설정한다.
- * @ updateHUD() : 현재 라운드 / 점수의 값을 변경한다.
- * 
- * @ toRad(deg) : 각도(도)를 라디안으로 변환한다.
- * @ haversineKm(lat1, lng1, lat2, lng2) : 위치 좌표 2개로 두 지점간 거리를 계산한다.
- * @ scoreFromDistance(distanceKm) : 점수를 거리에 기반을 두고 계산한다. (로그 기반 함수)
- * 
- * @ loadRegions(callback) : regions.json 파일을 ajax로 읽어서 regions 전역변수에 넣고,
- * 다 읽으면 callback()을 호출한다.
- * @ finalizeRoadviewReady(callback) : 파노라마의 좌표를 읽고, 라벨을 얻어 callback에 넘김
- * @ afterSetPano(callback) : 파노라마 전환 시점 파악, 위의 함수 호출
- * @ findRandomRoadviewInRegion(region, done)
- * 
- * @ randomInBBox(bbox) : 영역 내에서 임의의 좌표를 반환한다.
- * @ pickRandomRegion() : regions 내 임의의 영역을 가져온다.
- * 
- * @ getRegionLabel(latlng, done) : 좌표에 대해서 행정구역 라벨을 done에 반환한다.
- * 
+ *  - regions.json : [{ "region":"서울특별시", "bbox":[minLat, minLng, maxLat, maxLng] }, ...]
  */
 
 
@@ -687,4 +665,5 @@ if (typeof window !== 'undefined') {
     }
   });
 }
+
 
