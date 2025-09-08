@@ -461,8 +461,6 @@ function submitGuess(){
   // 문제 화면 숨기기
   var gameArea = document.getElementById('gameArea');
   if (gameArea) gameArea.style.display = 'none';
-  var returnButton = document.getElementById('btnGoMain2');
-  returnButton.style.display = 'none';
 
   // 결과 map 띄우기
   renderResultMap(
@@ -514,9 +512,6 @@ function resetRoundState(){
   
   var bar = document.getElementById('guessBar');
   if (bar) bar.style.display = 'none';
-
-  var returnButton = document.getElementById('btnGoMain2');
-  returnButton.style.display = '';
 
   if (map){
     map.setLevel(INITIAL_MAP_LEVEL, {animate:false});
@@ -665,5 +660,6 @@ if (typeof window !== 'undefined') {
     }
   });
 }
+
 
 
