@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Trivia Quiz (OpenTDB)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 800px; margin: 24px auto; }
+    .row { margin: 8px 0; }
+    button { margin: 4px 0; }
+    .answers button { display:block; width:100%; text-align:left; padding:10px; }
+    .meta { color:#555; font-size:14px; }
+  </style>
+</head>
+<body>
+  <h2>Trivia Quiz</h2>
+
+  <div class="row">
+    <label>카테고리:
+      <select id="category">
+        <option value="">Any</option>
+        <option value="9">General Knowledge</option>
+        <option value="18">Science: Computers</option>
+        <option value="23">History</option>
+        <option value="22">Geography</option>
+        <option value="11">Movies</option>
+      </select>
+    </label>
+    &nbsp;&nbsp;
+    <label>난이도:
+      <select id="difficulty">
+        <option value="">Any</option>
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+      </select>
+    </label>
+    &nbsp;&nbsp;
+    <label>문항 수:
+      <input id="amount" type="number" min="1" max="20" value="5" />
+    </label>
+    &nbsp;&nbsp;
+    <button id="startBtn">시작</button>
+  </div>
+
+  <div class="row meta">
+    <span id="progress">0 / 0</span> · 점수: <span id="score">0</span>
+  </div>
+
+  <div class="row">
+    <h3 id="question">문제를 시작해 주세요.</h3>
+    <div class="answers" id="answers"></div>
+  </div>
+
+  <div class="row">
+    <button id="nextBtn" disabled>다음 문제</button>
+    <button id="restartBtn" style="display:none;">다시 시작</button>
+  </div>
+
+  <!-- JS 파일 연결 -->
+  <script src="quizMaster_logic.js"></script>
+</body>
+</html>
