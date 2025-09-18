@@ -134,10 +134,11 @@ document.getElementById('nextBtn').onclick = function () {
 
 document.getElementById('restartBtn').onclick = function () {
   score = 0; idx = 0; questions = [];
-  document.getElementById('question').textContent = '문제를 시작해 주세요.';
+  document.getElementById('question').textContent = '시작을 누르면 문제가 표시됩니다.';
   document.getElementById('answers').innerHTML = '';
   document.getElementById('progress').textContent = '0 / 0';
   document.getElementById('score').textContent = '0';
   document.getElementById('nextBtn').disabled = true;
   document.getElementById('restartBtn').style.display = 'none';
 };
+
