@@ -65,7 +65,6 @@ function renderQuestion() {
   if (!q) {
     qElem.textContent = '끝! 최종 점수: ' + score + ' / ' + questions.length;
     answersDiv.innerHTML = '';
-    nextBtn.disabled = true;
     nextBtn.style.display = 'none';
     document.getElementById('restartBtn').style.display = 'inline-block';
     return;
@@ -88,9 +87,9 @@ function renderQuestion() {
         answered = true;
         if (a === q.correct_answer) {
           score++;
-          btn.style.border = '2px solid green';
+          btn.classList.add('is-correct');
         } else {
-          btn.style.border = '2px solid red';
+          btn.classList.add('is-wrong');
           // 정답 표시
           var children = answersDiv.children;
           for (var k = 0; k < children.length; k++) {
@@ -100,15 +99,13 @@ function renderQuestion() {
           }
         }
         document.getElementById('score').textContent = String(score);
-        nextBtn.disabled = false;
-        nextBtn.style.display = 'block';
+        nextBtn.style.display = 'inline-block';
       };
       answersDiv.appendChild(btn);
     })(all[i]);
   }
 
   updateHUD();
-  nextBtn.disabled = true;
   nextBtn.style.display = 'none';
 }
 
@@ -144,7 +141,3 @@ document.getElementById('restartBtn').onclick = function () {
   document.getElementById('nextBtn').disabled = true;
   document.getElementById('restartBtn').style.display = 'none';
 };
-
-
-
-
