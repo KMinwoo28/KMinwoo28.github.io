@@ -138,6 +138,6 @@ document.getElementById('restartBtn').onclick = function () {
   document.getElementById('answers').innerHTML = '';
   document.getElementById('progress').textContent = '0 / 0';
   document.getElementById('score').textContent = '0';
-  document.getElementById('nextBtn').disabled = true;
   document.getElementById('restartBtn').style.display = 'none';
 };
+
