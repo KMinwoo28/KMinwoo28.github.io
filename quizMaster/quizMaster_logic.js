@@ -101,6 +101,7 @@ function renderQuestion() {
         }
         document.getElementById('score').textContent = String(score);
         nextBtn.disabled = false;
+        nextBtn.style.display = '';
       };
       answersDiv.appendChild(btn);
     })(all[i]);
@@ -142,5 +143,6 @@ document.getElementById('restartBtn').onclick = function () {
   document.getElementById('nextBtn').disabled = true;
   document.getElementById('restartBtn').style.display = 'none';
 };
+
 
 
