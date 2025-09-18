@@ -79,7 +79,7 @@ function renderQuestion() {
 
   answersDiv.innerHTML = '';
   for (var i = 0; i < all.length; i++) {
-    (function (a) {
+    function (a) {
       var btn = document.createElement('button');
       btn.textContent = decodeHtml(a);
       btn.onclick = function () {
@@ -104,7 +104,7 @@ function renderQuestion() {
         nextBtn.style.display = 'inline-block';
       };
       answersDiv.appendChild(btn);
-    })(all[i]);
+    }(all[i]);
   }
 
   updateHUD();
@@ -142,3 +142,4 @@ document.getElementById('restartBtn').onclick = function () {
   document.getElementById('score').textContent = '0';
   document.getElementById('restartBtn').style.display = 'none';
 };
+
