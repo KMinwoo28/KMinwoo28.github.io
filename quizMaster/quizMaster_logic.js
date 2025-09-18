@@ -66,6 +66,7 @@ function renderQuestion() {
     qElem.textContent = '끝! 최종 점수: ' + score + ' / ' + questions.length;
     answersDiv.innerHTML = '';
     nextBtn.disabled = true;
+    nextBtn.style.display = 'none';
     document.getElementById('restartBtn').style.display = 'inline-block';
     return;
   }
@@ -141,4 +142,5 @@ document.getElementById('restartBtn').onclick = function () {
   document.getElementById('nextBtn').disabled = true;
   document.getElementById('restartBtn').style.display = 'none';
 };
+
 
