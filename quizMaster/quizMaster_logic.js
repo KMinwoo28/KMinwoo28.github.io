@@ -95,7 +95,8 @@ function renderQuestion() {
           for (var k = 0; k < children.length; k++) {
             if (children[k].textContent === decodeHtml(q.correct_answer)) {
               children[k].style.border = '2px solid green';
-            }
+            } else {
+              children[k].style.border = '2px solid red';
           }
         }
         document.getElementById('score').textContent = String(score);
@@ -140,4 +141,5 @@ document.getElementById('restartBtn').onclick = function () {
   document.getElementById('score').textContent = '0';
   document.getElementById('restartBtn').style.display = 'none';
 };
+
 
