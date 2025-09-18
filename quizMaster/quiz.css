@@ -1,0 +1,153 @@
+/* ========== Base ========== */
+:root{
+  --bg: #0b0c10;
+  --panel: #111317;
+  --text: #e8eef2;
+  --muted: #9aa4af;
+  --accent: #6aa5ff;       /* 포커스/강조 */
+  --accent-2: #8ad1ff;     /* 보조 강조 */
+  --ok: #27c93f;
+  --bad: #ff5f56;
+  --border: #21252b;
+  --btn: #1a1d24;
+  --btn-hover: #20242c;
+}
+
+* { box-sizing: border-box; }
+html,body { height: 100%; }
+body{
+  margin: 0;
+  background: radial-gradient(1200px 800px at 20% -10%, #151922 0%, var(--bg) 60%);
+  color: var(--text);
+  font: 15px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+}
+
+/* ========== Layout ========== */
+.container{
+  max-width: 860px;
+  padding: 24px;
+  margin: 0 auto;
+}
+
+.card{
+  background: linear-gradient(180deg, #12151b 0%, var(--panel) 100%);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+}
+
+h1,h2,h3{ margin: 0 0 12px; letter-spacing: .2px; }
+h1{ font-size: 28px; }
+h2{ font-size: 22px; color: var(--accent-2); font-weight: 600; }
+h3{ font-size: 18px; }
+
+/* ========== Controls ========== */
+.controls{
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 10px;
+  margin: 12px 0 6px;
+}
+
+.controls .field{
+  grid-column: span 12;
+}
+@media (min-width: 640px){
+  .controls .field.sm-4{ grid-column: span 4; }
+  .controls .field.sm-3{ grid-column: span 3; }
+  .controls .field.sm-2{ grid-column: span 2; }
+}
+
+label{
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+select, input[type="number"]{
+  width: 100%;
+  padding: 10px 12px;
+  background: #0e1116;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  outline: none;
+}
+select:focus, input[type="number"]:focus{ border-color: var(--accent); box-shadow: 0 0 0 3px rgba(106,165,255,.18); }
+
+/* ========== Buttons ========== */
+.button, button{
+  appearance: none;
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, var(--btn), #161a21);
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform .04s ease, background .2s ease, border-color .2s ease;
+}
+button:hover{ background: var(--btn-hover); }
+button:active{ transform: translateY(1px); }
+button[disabled]{ opacity: .5; cursor: not-allowed; }
+
+.stack{ display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* ========== HUD ========== */
+.hud{
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  color: var(--muted);
+  font-size: 14px;
+  margin: 10px 0 18px;
+}
+.badge{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: #0f1319;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+.badge strong{ color: var(--text); }
+
+/* ========== Question & Answers ========== */
+.question{
+  font-size: 20px;
+  line-height: 1.5;
+  padding: 12px 0 6px;
+  word-break: keep-all;
+}
+.answers{
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+}
+.answer-btn{
+  text-align: left;
+  padding: 12px 14px;
+  border-radius: 12px;
+  white-space: normal;
+}
+.answer-btn:hover{ border-color: #2a313b; }
+
+/* 정답/오답 표시 (JS에서 클래스만 붙이면 자동 스타일 적용) */
+.answer-btn.is-correct{ border-color: var(--ok); box-shadow: 0 0 0 3px rgba(39,201,63,.15); }
+.answer-btn.is-wrong  { border-color: var(--bad); box-shadow: 0 0 0 3px rgba(255,95,86,.15); }
+
+/* ========== Footer actions ========== */
+.footer-actions{
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+/* ========== Subtle transitions ========== */
+.fade-in{ animation: fade-in .25s ease; }
+@keyframes fade-in{
+  from{ opacity: 0; transform: translateY(4px); }
+  to  { opacity: 1; transform: translateY(0); }
+}
