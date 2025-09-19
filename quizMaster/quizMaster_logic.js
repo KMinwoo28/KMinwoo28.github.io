@@ -78,8 +78,7 @@ function renderQuestion() {
 
   var all;
   if (q.type === "boolean"){
-	all =["True", "False"];
-	shuffle(all);
+	all =["O", "X"];
   } else {
 	all = q.incorrect_answers.slice(0);
 	all.push(q.correct_answer);
@@ -151,4 +150,5 @@ document.getElementById('restartBtn').onclick = function () {
   document.getElementById('score').textContent = '0';
   document.getElementById('restartBtn').style.display = 'none';
 };
+
 
