@@ -14,20 +14,35 @@
     	}, 'google_translate_element');
     }
     
-    // 위젯의 언어 select를 찾아 'ko'로 강제 세팅
+    // 위젯의 언어 select를 찾아 값 바꾸기
     function forceTranslateKo(){
     	var sel = document.querySelector('.goog-te-combo');
-    	if (sel && sel.value !== 'ko'){
-    		sel.value = 'ko';
+    	if (sel && sel.value !== lang){
+    		sel.value = lang;
     		sel.dispatchEvent(new Event('change'));
     	}
     }
+    // 토글 상태 (on일 때만 새 텍스트 재번역)
+    var translateOn = false;
     
-    // 동적으로 문제/보기가 갱신된 뒤 번역을 다시 트리거
+    // 동적 텍스트 갱신 직후 호출 -> on일 때만 번역 트리거
     function retriggerTranslateSoon(){
-    	// 위젯 로드/DOM 갱신 타이밍을 고려해 약간의 지연 후 트리거
-    	setTimeout(forceTranslateKo, 120);
+    	if (!translateOn) return;
+    	setTimeout(function(){ forceTranslateTo('ko'); }, 120);
     }
+    
+    // 토글 체크박스 이벤트
+    document.addEventListener('DOMContentLoaded', function(){
+    	var tgl = document.getElementById('translateToggle');
+    	if (!tgl) return;
+    	tgl.addEventListener('change', function(){
+    		translateOn = tgl.checked;
+    		// on => 한글, off => 원문(영어)로 즉시 전환
+    		setTimeout(function(){ forceTranslateTo(translateOn ? 'ko' : 'en'); }, 120);
+    	});
+    });
+    
+    
   </script>
   
 </head>
@@ -105,7 +120,13 @@
           <button id="restartBtn" class="button" style="display:none;">다시 시작</button>
 		</div>
      </div>
-     <div id="google_translate_element" style="position:fixed; right:8px; bottom:8px; z-index:9999;"></div>
+     <div id="translate_section">
+       <label style="position:fixed; right:8px; bottom:52px; z-index:9999; background:#0008; padding:6px 10px; border-radius:8px">
+         <input type="checkbox" id="translateToggle">
+         번역
+       </label>
+       <div id="google_translate_element" style="position:fixed; right:8px; bottom:8px; z-index:9999;"></div>
+     </div>
   </div>
 
   <!-- JS 파일 연결 -->
@@ -113,4 +134,3 @@
  
 </body>
 </html>
-
