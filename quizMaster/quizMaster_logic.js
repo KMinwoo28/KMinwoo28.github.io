@@ -28,7 +28,7 @@ function buildUrl() {
   var url = 'https://opentdb.com/api.php?amount=' + encodeURIComponent(amount);
   if (cat) { url += '&category=' + encodeURIComponent(cat); }
   if (diff) { url += '&difficulty=' + encodeURIComponent(diff); }
-  if (qtype) { url += '&qtype=' + encodeURIComponent(qtype); }
+  if (qtype) { url += '&type=' + encodeURIComponent(qtype); }
   
   return url;
 }
@@ -151,3 +151,4 @@ document.getElementById('restartBtn').onclick = function () {
   document.getElementById('score').textContent = '0';
   document.getElementById('restartBtn').style.display = 'none';
 };
+
