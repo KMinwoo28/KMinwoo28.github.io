@@ -7,10 +7,26 @@
   <link rel="stylesheet" href="quiz.css">
   <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   <script type="text/javascript">
+    // 위젯 초기화: 페이지 기본언어를 'en'으로 두면 영어 => 한국어 번역이 더 안정적이다.
     function googleTranslateElementInit() {
     	new google.translate.TranslateElement({
-    		pageLanguage: 'ko', autoDisplay: false
+    		pageLanguage: 'en', autoDisplay: false
     	}, 'google_translate_element');
+    }
+    
+    // 위젯의 언어 select를 찾아 'ko'로 강제 세팅
+    function forceTranslateKo(){
+    	var sel = document.querySelector('.goog-te-combo');
+    	if (sel && sel.value !== 'ko'){
+    		sel.value = 'ko';
+    		sel.dispatchEvent(new Event('change'));
+    	}
+    }
+    
+    // 동적으로 문제/보기가 갱신된 뒤 번역을 다시 트리거
+    function retriggerTranslateSoon(){
+    	// 위젯 로드/DOM 갱신 타이밍을 고려해 약간의 지연 후 트리거
+    	setTimeout(forceTranslateKo, 120);
     }
   </script>
   
@@ -18,12 +34,7 @@
 <body>
   <div class="container">
     <div class="card fade-in">
-      <div class="field sm-6">
       <h2>Trivia Quiz</h2>
-      </div>
-      <div class="field sm-6">
-        <div id="google_translate_element"></div>
-      </div>
 	    <div class="controls">
 	      <div class="field sm-3">
             <label>카테고리</label>
@@ -94,6 +105,7 @@
           <button id="restartBtn" class="button" style="display:none;">다시 시작</button>
 		</div>
      </div>
+     <div id="google_translate_element" style="position:fixed; right:8px; bottom:8px; z-index:9999;"></div>
   </div>
 
   <!-- JS 파일 연결 -->
@@ -101,5 +113,3 @@
  
 </body>
 </html>
-
-
