@@ -22,12 +22,11 @@
       <h2>Trivia Quiz</h2>
       </div>
       <div class="field sm-6">
-      
+        <div id="google_translate_element"></div>
       </div>
 	    <div class="controls">
 	      <div class="field sm-3">
             <label>카테고리</label>
-            <div id="google_translate_element">
             <select id="category">
               <option value="">Any</option>
               <option value="9">General Knowledge</option>
@@ -55,12 +54,9 @@
               <option value="31">Entertainment: Japanese Anime & Manga</option>
               <option value="32">Entertainment: Cartoon & Animations</option>
             </select>
-            </div>
           </div>
           <div class="field sm-2">
-            <div id="google_translate_element">
             <label>문제 유형</label>
-            </div>
             <select id="qtype">
               <option value="">Any</option>
               <option value="multiple">객관식</option>
@@ -68,9 +64,7 @@
             </select>
           </div>
           <div class="field sm-2">
-            <div id="google_translate_element">
             <label>난이도</label>
-            </div>
             <select id="difficulty">
               <option value="">Any</option>
               <option value="easy">Easy</option>
@@ -79,27 +73,23 @@
             </select>
           </div>
           <div class="field sm-2">
-          <div id="google_translate_element">
             <label>문항 수</label>
-          </div>
             <input id="amount" type="number" min="1" max="20" value="5" />
           </div>
-          <div id="google_translate_element" class="field sm-3" style="align-self:end">
+          <div class="field sm-3" style="align-self:end">
             <button id="startBtn" class="button" style="width:100%">시작</button>
           </div>
         </div>
 		
-		<div id="google_translate_element" class="hud">
+		<div class="hud">
 		  <span class="badge">진행 <strong id="progress">0 / 0</strong></span>
 		  <span class="badge">점수 <strong id="score">0</strong></span>
 		</div>
 		
-		<div id="google_translate_element">
-		  <div class="question" id="question">시작을 누르면 문제가 표시됩니다.</div>
-		  <div class="answers" id="answers"></div>
-		</div>
+		<div class="question" id="question">시작을 누르면 문제가 표시됩니다.</div>
+		<div class="answers" id="answers"></div>
 		
-		<div id="google_translate_element" class="footer-actions">
+		<div class="footer-actions">
 		  <button id="nextBtn" class="button" style="display:none;">다음 문제</button>
           <button id="restartBtn" class="button" style="display:none;">다시 시작</button>
 		</div>
