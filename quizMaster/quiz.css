@@ -135,8 +135,8 @@ button[disabled]{ opacity: .5; cursor: not-allowed; }
 .answer-btn:hover{ border-color: #2a313b; }
 
 /* 정답/오답 표시 (JS에서 클래스만 붙이면 자동 스타일 적용) */
-.answer-btn.is-correct{ border-color: var(--ok); box-shadow: 0 0 0 3px rgba(39,201,63,.15); }
-.answer-btn.is-wrong  { border-color: var(--bad); box-shadow: 0 0 0 3px rgba(255,95,86,.15); }
+.answer-btn.is-correct{ border: 2px solid #27c93f; box-shadow: 0 0 0 3px rgba(39,201,63,.15); }
+.answer-btn.is-wrong  { border: 2px solid #ff5f56; box-shadow: 0 0 0 3px rgba(255,95,86,.15); }
 
 /* ========== Footer actions ========== */
 .footer-actions{
@@ -151,3 +151,4 @@ button[disabled]{ opacity: .5; cursor: not-allowed; }
   from{ opacity: 0; transform: translateY(4px); }
   to  { opacity: 1; transform: translateY(0); }
 }
+
