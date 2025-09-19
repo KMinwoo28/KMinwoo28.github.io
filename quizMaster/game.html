@@ -12,7 +12,7 @@
     <div class="card fade-in">
       <h2>Trivia Quiz</h2>
 	    <div class="controls">
-	      <div class="field sm-4">
+	      <div class="field sm-3">
             <label>카테고리</label>
             <select id="category">
               <option value="">Any</option>
@@ -23,7 +23,15 @@
               <option value="11">Movies</option>
             </select>
           </div>
-          <div class="field sm-3">
+          <div class="field sm-2">
+            <label>문제 유형</label>
+            <select id="qtype">
+              <option value="">Any</option>
+              <option value="multiple">객관식</option>
+              <option value="boolean">OX</option>
+            </select>
+          </div>
+          <div class="field sm-2">
             <label>난이도</label>
             <select id="difficulty">
               <option value="">Any</option>
@@ -50,7 +58,7 @@
 		<div class="answers" id="answers"></div>
 		
 		<div class="footer-actions">
-		  <button id="nextBtn" class="button" style="display:none">다음 문제</button>
+		  <button id="nextBtn" class="button" style="display:none;">다음 문제</button>
           <button id="restartBtn" class="button" style="display:none;">다시 시작</button>
 		</div>
      </div>
@@ -60,5 +68,3 @@
   <script src="quizMaster_logic.js"></script>
 </body>
 </html>
-
-
