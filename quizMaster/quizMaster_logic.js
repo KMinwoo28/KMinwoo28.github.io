@@ -88,10 +88,10 @@ function renderQuestion() {
         if (a === q.correct_answer) {
           score++;
           btn.classList.add('is-correct');
-		  
+		  btn.style.border = '2px solid green';
         } else {
           btn.classList.add('is-wrong');
-		  
+		  btn.style.border = '2px solid red';
           // 정답 표시
           var children = answersDiv.children;
           for (var k = 0; k < children.length; k++) {
@@ -142,6 +142,7 @@ document.getElementById('restartBtn').onclick = function () {
   document.getElementById('score').textContent = '0';
   document.getElementById('restartBtn').style.display = 'none';
 };
+
 
 
 
