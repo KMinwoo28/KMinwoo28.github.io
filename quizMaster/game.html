@@ -5,26 +5,40 @@
   <title>Trivia Quiz (OpenTDB)</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="stylesheet" href="quiz.css">
-
+  <script src=https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+    	new google.translate.TranslateElement({
+    		pageLanguage: 'ko', autoDisplay: false
+    	}, 'google_translate_element');
+    }
+  </script>
+  
 </head>
 <body>
   <div class="container">
     <div class="card fade-in">
+      <div class="field sm-6">
       <h2>Trivia Quiz</h2>
+      </div>
+      <div class="field sm-6">
+      
+      </div>
 	    <div class="controls">
 	      <div class="field sm-3">
             <label>카테고리</label>
+            <div id="google_translate_element">
             <select id="category">
               <option value="">Any</option>
               <option value="9">General Knowledge</option>
               <option value="10">Entertainment: Books</option>
               <option value="11">Entertainment: Film</option>
               <option value="12">Entertainment: Music</option>
-              <option value="13">Entertainment: Musicals &amps; Theatres</option>
+              <option value="13">Entertainment: Musicals & Theatres</option>
               <option value="14">Entertainment: Television</option>
               <option value="15">Entertainment: Video Games</option>
               <option value="16">Entertainment: Board Games</option>
-              <option value="17">Science &amps; Nature</option>
+              <option value="17">Science & Nature</option>
               <option value="18">Science: Computers</option>
               <option value="19">Science: Mathematics</option>
               <option value="20">Mythology</option>
@@ -41,9 +55,12 @@
               <option value="31">Entertainment: Japanese Anime & Manga</option>
               <option value="32">Entertainment: Cartoon & Animations</option>
             </select>
+            </div>
           </div>
           <div class="field sm-2">
+            <div id="google_translate_element">
             <label>문제 유형</label>
+            </div>
             <select id="qtype">
               <option value="">Any</option>
               <option value="multiple">객관식</option>
@@ -51,7 +68,9 @@
             </select>
           </div>
           <div class="field sm-2">
+            <div id="google_translate_element">
             <label>난이도</label>
+            </div>
             <select id="difficulty">
               <option value="">Any</option>
               <option value="easy">Easy</option>
@@ -60,23 +79,27 @@
             </select>
           </div>
           <div class="field sm-2">
+          <div id="google_translate_element">
             <label>문항 수</label>
+          </div>
             <input id="amount" type="number" min="1" max="20" value="5" />
           </div>
-          <div class="field sm-3" style="align-self:end">
+          <div id="google_translate_element" class="field sm-3" style="align-self:end">
             <button id="startBtn" class="button" style="width:100%">시작</button>
           </div>
         </div>
 		
-		<div class="hud">
+		<div id="google_translate_element" class="hud">
 		  <span class="badge">진행 <strong id="progress">0 / 0</strong></span>
 		  <span class="badge">점수 <strong id="score">0</strong></span>
 		</div>
 		
-		<div class="question" id="question">시작을 누르면 문제가 표시됩니다.</div>
-		<div class="answers" id="answers"></div>
+		<div id="google_translate_element">
+		  <div class="question" id="question">시작을 누르면 문제가 표시됩니다.</div>
+		  <div class="answers" id="answers"></div>
+		</div>
 		
-		<div class="footer-actions">
+		<div id="google_translate_element" class="footer-actions">
 		  <button id="nextBtn" class="button" style="display:none;">다음 문제</button>
           <button id="restartBtn" class="button" style="display:none;">다시 시작</button>
 		</div>
@@ -85,8 +108,6 @@
 
   <!-- JS 파일 연결 -->
   <script src="quizMaster_logic.js"></script>
+ 
 </body>
 </html>
-
-
-
