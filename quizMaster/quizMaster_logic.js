@@ -23,10 +23,13 @@ function buildUrl() {
   var amount = document.getElementById('amount').value || 5;
   var cat = document.getElementById('category').value;
   var diff = document.getElementById('difficulty').value;
-
-  var url = 'https://opentdb.com/api.php?amount=' + encodeURIComponent(amount) + '&type=multiple';
+  var qtype = document.getElementById('qtype').value;
+  
+  var url = 'https://opentdb.com/api.php?amount=' + encodeURIComponent(amount);
   if (cat) { url += '&category=' + encodeURIComponent(cat); }
   if (diff) { url += '&difficulty=' + encodeURIComponent(diff); }
+  if (qtype) { url += '&qtype=' + encodeURIComponent(qtype); }
+  
   return url;
 }
 
@@ -73,13 +76,19 @@ function renderQuestion() {
   answered = false;
   qElem.textContent = decodeHtml(q.question);
 
-  var all = q.incorrect_answers.slice(0);
-  all.push(q.correct_answer);
-  shuffle(all);
+  var all;
+  if (q.type === "boolean"){
+	all =["True", "False"];
+	shuffle(all);
+  } else {
+	all = q.incorrect_answers.slice(0);
+	all.push(q.correct_answer);
+	shuffle(all);
+  }
 
   answersDiv.innerHTML = '';
   for (var i = 0; i < all.length; i++) {
-	(function (a) {
+    (function (a) {
       var btn = document.createElement('button');
       btn.textContent = decodeHtml(a);
       btn.onclick = function () {
@@ -88,16 +97,16 @@ function renderQuestion() {
         if (a === q.correct_answer) {
           score++;
           btn.classList.add('is-correct');
-		  btn.style.border = '2px solid green';
+          btn.style.border = '2px solid green';
         } else {
           btn.classList.add('is-wrong');
-		  btn.style.border = '2px solid red';
+          btn.style.border = '2px solid red';
           // 정답 표시
           var children = answersDiv.children;
           for (var k = 0; k < children.length; k++) {
             if (children[k].textContent === decodeHtml(q.correct_answer)) {
               children[k].style.border = '2px solid green';
-            } 
+            }
           }
         }
         document.getElementById('score').textContent = String(score);
@@ -142,10 +151,3 @@ document.getElementById('restartBtn').onclick = function () {
   document.getElementById('score').textContent = '0';
   document.getElementById('restartBtn').style.display = 'none';
 };
-
-
-
-
-
-
-
