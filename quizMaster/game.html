@@ -10,7 +10,8 @@
     // 위젯 초기화: 페이지 기본언어를 'en'으로 두면 영어 => 한국어 번역이 더 안정적이다.
     function googleTranslateElementInit() {
     	new google.translate.TranslateElement({
-    		pageLanguage: 'en', autoDisplay: false
+    		pageLanguage: 'en', autoDisplay: false,
+			includedLanguages: 'ko, en, ja, zh-CN, zh-TW, de'
     	}, 'google_translate_element');
     }
     
@@ -133,6 +134,7 @@
  
 </body>
 </html>
+
 
 
 
