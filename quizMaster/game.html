@@ -38,7 +38,7 @@
     	tgl.addEventListener('change', function(){
     		translateOn = tgl.checked;
     		// on => 한글, off => 원문(영어)로 즉시 전환
-    		setTimeout(function(){ forceTranslateTo(translateOn ? 'ko' : 'en'); }, 120);
+    		setTimeout(function(){ forceTranslateTo('ko'); }, 120);
     	});
     });
     
@@ -134,4 +134,5 @@
  
 </body>
 </html>
+
 
