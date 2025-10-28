@@ -17,9 +17,30 @@
     button { padding: 8px 12px; border: 1px solid #ccc; background: #fafafa; border-radius: 8px; cursor: pointer; }
     button:disabled { opacity: 0.6; cursor: not-allowed; }
     small.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; word-break: break-all; }
+    .attribution{
+      font-size:12px;
+      color:#666;
+      opacity:.7;            /* 흐릿하게 */
+      margin:4px 0 10px;
+    }
+    .attribution a{
+      color:inherit;
+      text-decoration:underline;
+      text-underline-offset:2px;
+      text-decoration-thickness:.5px;
+    }
+    .attribution:hover{ opacity:1; }  /* 마우스 올리면 선명하게 */
+    @media (prefers-color-scheme: dark){
+      .attribution{ color:#aaa; }
+    }
+
   </style>
 </head>
 <body>
+  <div class="attribution" role="note" aria-label="API 출처">
+    Images via <a href="https://picsum.photos/" target="_blank" rel="noopener">picsum.photos</a>
+  </div>
+
   <h1>Picsum 임의 이미지 생성기</h1>
 
   <fieldset>
