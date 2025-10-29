@@ -17,6 +17,7 @@
     button { padding: 8px 12px; border: 1px solid #ccc; background: #fafafa; border-radius: 8px; cursor: pointer; }
     button:disabled { opacity: 0.6; cursor: not-allowed; }
     small.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; word-break: break-all; }
+    .is-disabled { pointer-events: none; opacity: .5; }
     .attribution{
       font-size:12px;
       color:#666;
@@ -66,26 +67,29 @@
     const imagesEl = document.getElementById('images');
     const el = id => document.getElementById(id);
     
+    // 랜덤 스트링 배열 생성.
+    function rand36(len = 12){
+      let s = '';
+      while (s.length < len) s += Math.random().toString(36).slice(2);
+      return s.slice(0, len);
+    }
+
     // Picsum의 랜덤/시드 기반 이미지 앤드포인트 URL을 한 함수로 생성한다.
     function buildPicsumUrl({ w, h, grayscale, blur, seed, nonce }) {
-      // 랜덤 vs 고정(seed) 엔드포인트 선택
-      // 랜덤: https://picsum.photos/{w}/{h}
-      // 시드:  https://picsum.photos/seed/{seed}/{w}/{h}
-      // seed가 설정 되었는지 여부에 따라 URL base의 생성 방식을 바꾼다.
 
-      // 1. 베이스 경로 선택
-      const base = seed ? `https://picsum.photos/seed/${encodeURIComponent(seed)}/${w}/${h}`
-                        : `https://picsum.photos/${w}/${h}`;
+      // seed 결정
+      const finalSeed = 
+        (seed && String(seed).trim()) ||
+        `${Date.now()}-${rand36(8)}`;
 
-      // 2. 쿼리스트링 구성
+      // /seed/{seed}/{w}/{h} 사용
+      const base = `https://picsum.photos/seed/${encodeURIComponent(finalSeed)}/${w}/${h}`;
+                      
+      // 옵션 쿼리
       const params = new URLSearchParams(); // 이걸로 옵션들을 문자화해 base 뒤에 ?로 붙여 최종 URL을 완성하는 역할을 한다.
       if (grayscale) params.set('grayscale', '');    // ?grayscale
       if (blur > 0) params.set('blur', String(blur)); // ?blur=1..10
-      // 캐시 회피용 토큰(시드 없는 랜덤일 때만 매번 새 이미지 강제)
-      // t를 매번 유니크하게 바꿔 랜덤성 보장
-      if (!seed) {
-        params.set('t', nonce || `${Date.now()}-${Math.random().toString(36).slice(2)}`);
-      }
+      
       const s = params.toString();
       return s ? `${base}?${s}` : base;
     }
@@ -130,7 +134,7 @@
           ${authorLine}
           <div class="actions">
             ${origLink}
-            <a href="${src}" download>다운로드</a>
+            <a class="download-link is-disabled" href="${src}" download>다운로드</a>
             <button class="copy" data-url="${src}">URL 복사</button>
           </div>
           <details style="margin-top:6px">
@@ -158,6 +162,17 @@
       }
     }
 
+    imagesEl.addEventListener('load', (e) => {
+      const img = e.target;
+      if (!img.classList.contains('thumb')) return;
+      const card = img.closest('.card');
+      const link = card && card.querySelector('a.download-link');
+      if (link){
+        if (img.currentSrc) link.href = img.currentSrc;
+        link.classList.remove('is-disabled');
+      }
+    }, true);
+    
     /** 이미지 카드들이 들어있는 부모 컨테이너(#images)에 클릭 리스너를 1개만 단다.
      * 이유(이벤트 위임): 카드와 버튼은 동적으로 계속 추가되므로, 각 버튼마다 리스너를 붙이는 대신
      * 부모 하나가 모두 처리하게 해서 성능/메모리/코드 단순화를 얻는다.
@@ -166,14 +181,82 @@
      * 참고 : 기본 옵션은 { capture: false } (버블 단계). 캡처 단계에서 받고 싶다면 세 번째 인자
      * 나 옵션 객체로 바꿀 수 있다.
      */
+    imagesEl.addEventListener('click', async (e) => {
+      // 다운로드 링크 처리
+      const a = e.target.closest('a.download-link');
+      if (!a) return;
+
+      e.preventDefault();
+
+      const card = a.closest('.card');
+      const img = card && card.querySelector('img.thumb');
+      if (!img) return;
+
+      // 로드 완료 보장
+      if (!img.complete || img.naturalWidth === 0){
+        try { await img.decode?.(); } catch {}
+        if (!img.complete || img.naturalWidth === 0) {
+          await new Promise((res, rej) => {
+            img.addEventListener('load', res, { once: true });
+            img.addEventListener('error', () => rej(new Error('이미지 로드 실패')), { once: true });
+          });
+        }
+      }
+
+      const finalUrl = img.currentSrc || img.src;
+      // UX 잠금
+      const prev = a.textContent;
+      a.textContent = '다운로드 준비 중...';
+      a.setAttribute('aria-busy', 'true');
+      a.style.pointerEvents = 'none';
+
+      try {
+        // 같은 파일을 확정적으로 받기 위해 currentSrc를 직접 fetch
+        const res = await fetch(finalUrl, { mode: 'cors', cache: 'no-store' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const blob = await res.blob();
+        
+        // 파일명 힌트 만들기 (URL에서 id/크기 추출 실패 시 타임스탬프 fallback)
+        let filename = `picsum-${Date.now()}.jpg`;
+        const m = finalUrl.match(/\/id\/(\d+)\/(\d+)\/(\d+)\.jpg/i);
+        if (m) {
+          const [, id, w, h] = m;
+          filename = `picsum-${id}-${w}x${h}.jpg`;
+        }
+
+        // Blob -> Object URL -> 가짜 a클릭으로 저장창 띄우기
+        const objURL = URL.createObjectURL(blob);
+        const tmp = document.createElement('a');
+        tmp.href = objURL;
+        tmp.download = filename;
+        document.body.appendChild(tmp);
+        tmp.click();
+        tmp.remove();
+        URL.revokeObjectURL(objURL);
+      } catch (err) {
+        alert('이미지 저장 중 오류 : ' + (err?.message || err));
+      } finally {
+        // UX 복원
+        a.textContent = prev;
+        a.removeAttribute('aria-busy');
+        a.style.pointerEvents = '';
+      }
+      // 다운로드 처리 끝.
+    });
+
     imagesEl.addEventListener('click', (e) => {
+      // URL 복사 버튼 처리
+
       // e.target : 실제로 클릭된 가장 안쪽의 요소(예: 버튼 안의 <span>을 눌러도 그 <span>이 target일 수 있음)
       // .closest(selector) : 현재 노드에서 시작해 자신->부모->조상을 올라가며 셀렉터와
       // 가장 가까이 매칭되는 요소를 찾는다. 
       // 버튼 내부의 아이콘/텍스트를 눌러 target이 자식이어도, closest가 버튼을 정확히 찾아준다.
       // => 즉, 그리드 아무곳이나 클릭하든, 복사버튼을 눌렀다면 버튼 요소를 찾아라.
-      const btn = e.target.closest('button.copy');       // 클래스 copy를 가진 <button>을 찾음
-      if (btn) copyToClipboard(btn.dataset.url, btn);
+      const copyBtn = e.target.closest('button.copy');       // 클래스 copy를 가진 <button>을 찾음
+      if (copyBtn){
+        copyToClipboard(copyBtn.dataset.url, copyBtn);
+        return;
+      }
     });
 
     function getOptions() {
